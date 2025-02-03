@@ -80,7 +80,7 @@ pub fn singleton[A](a : A) -> T[A] {
 
 ///|
 pub fn repeat[A](a : A) -> T[A] {
-  { run: fn() { Some(a) }}
+  { run: fn() { Some(a) } }
 }
 
 ///|

@@ -6,20 +6,20 @@ pub fn next[A](self : T[A]) -> A? {
 
 ///|
 pub fn peek[A](self : T[A]) -> A? {
-      match (self.run)() {
-        None => None
-        Some(v) => {
-          let used = false
-          let run = self.run
-          self.run = fn() {
-            match used {
-              true => run()
-              false => Some(v)
-            }
-          }
-          Some(v)
+  match (self.run)() {
+    None => None
+    Some(v) => {
+      let used = false
+      let run = self.run
+      self.run = fn() {
+        match used {
+          true => run()
+          false => Some(v)
         }
       }
+      Some(v)
+    }
+  }
 }
 
 ///|
@@ -86,23 +86,19 @@ pub fn drop[A](self : T[A], n : Int) -> T[A] {
     i += 1
     (self.run)() |> ignore
   }
-  { run: fn() { (self.run)() }, }
+  { run: fn() { (self.run)() } }
 }
 
+///|
 pub fn drop_while[A](self : T[A], f : (A) -> Bool) -> T[A] {
   let mut end = false
   while not(end) {
     match (self.run)() {
       None => break
-      Some(v) =>
-        if f(v) {
-          continue
-        } else {
-          end = true
-        }
+      Some(v) => if f(v) { continue } else { end = true }
     }
   }
-  { run: fn() { (self.run)() }, }
+  { run: fn() { (self.run)() } }
 }
 
 ///|
