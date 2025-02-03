@@ -157,7 +157,7 @@ pub fn join[A : Show](self : T[A], separator~ : String) -> String {
 }
 
 ///|
-fn find_first[A](self : T[A], f : (A) -> Bool) -> A? {
+pub fn find_first[A](self : T[A], f : (A) -> Bool) -> A? {
   loop self.next() {
     Some(v) => {
       if f(v) {
@@ -166,5 +166,17 @@ fn find_first[A](self : T[A], f : (A) -> Bool) -> A? {
       continue self.next()
     }
     None => None
+  }
+}
+
+///|
+pub fn fold[A, B](self : T[A], init : B, f : (B, A) -> B) -> B {
+  let mut acc = init
+  loop self.next() {
+    Some(v) => {
+      acc = f(acc, v)
+      continue self.next()
+    }
+    None => acc
   }
 }

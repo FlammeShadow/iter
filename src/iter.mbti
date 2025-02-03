@@ -17,7 +17,13 @@ fn repeat[A](A) -> T[A]
 
 fn repeat_by[A](() -> A) -> T[A]
 
+fn seq[A](init~ : A, step~ : (A) -> A, cond~ : (A) -> Bool) -> T[A]
+
 fn singleton[A](A) -> T[A]
+
+fn unfold[A, S](state~ : S, step~ : (S) -> (A, S)?) -> T[A]
+
+fn unfold_eager[A, S](state~ : S, step~ : (S) -> (A, S)?) -> T[A]
 
 // Types and methods
 pub struct T {
@@ -32,8 +38,10 @@ impl T {
   eachi[A](Self[A], (Int, A) -> Unit) -> Unit
   filter[A](Self[A], (A) -> Bool) -> Self[A]
   filter_map[A, B](Self[A], (A) -> B?) -> Self[B]
+  find_first[A](Self[A], (A) -> Bool) -> A?
   flat_map[A, B](Self[A], (A) -> Self[B]) -> Self[B]
   flatten[A](Self[Self[A]]) -> Self[A]
+  fold[A, B](Self[A], B, (B, A) -> B) -> B
   intersperse[A](Self[A], A) -> Self[A]
   iter[A](Self[A]) -> Iter[A]
   join[A : Show](Self[A], separator~ : String) -> String

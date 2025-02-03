@@ -1,4 +1,49 @@
-/// Experimental functions, maybe removed or changed in the future.
+// Experimental functions, maybe removed or changed in the future.
+
+///|
+pub fn seq[A](init~ : A, step~ : (A) -> A, cond~ : (A) -> Bool) -> T[A] {
+  let mut v = init
+  {
+    run: fn() {
+      if cond(v) {
+        let result = Some(v)
+        v = step(v)
+        result
+      } else {
+        None
+      }
+    },
+  }
+}
+
+///|
+fn unfold_[A, S](state~ : S, step~ : (S) -> (A, S)?) -> Array[A] {
+  match step(state) {
+    Some((v, state)) => [v, ..unfold_(state~, step~)]
+    None => []
+  }
+}
+
+///|
+pub fn unfold_eager[A, S](state~ : S, step~ : (S) -> (A, S)?) -> T[A] {
+  from_array(unfold_(state~, step~))
+}
+
+///|
+pub fn unfold[A, S](state~ : S, step~ : (S) -> (A, S)?) -> T[A] {
+  let mut state = state
+  {
+    run: fn() {
+      match step(state) {
+        Some((v, state_)) => {
+          state = state_
+          Some(v)
+        }
+        None => None
+      }
+    },
+  }
+}
 
 ///|
 pub fn range_by[A : Compare](start : A, end? : A, step~ : (A) -> A) -> T[A] {
