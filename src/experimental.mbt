@@ -1,6 +1,6 @@
 // Experimental functions, maybe removed or changed in the future.
 
-///|
+///| **NOTE: Experimental**
 pub fn seq[A](init~ : A, step~ : (A) -> A, cond~ : (A) -> Bool) -> T[A] {
   let mut v = init
   {
@@ -16,7 +16,7 @@ pub fn seq[A](init~ : A, step~ : (A) -> A, cond~ : (A) -> Bool) -> T[A] {
   }
 }
 
-///|
+///| **NOTE: Experimental**
 fn unfold_[A, S](state~ : S, step~ : (S) -> (A, S)?) -> Array[A] {
   match step(state) {
     Some((v, state)) => [v, ..unfold_(state~, step~)]
@@ -24,12 +24,12 @@ fn unfold_[A, S](state~ : S, step~ : (S) -> (A, S)?) -> Array[A] {
   }
 }
 
-///|
+///| **NOTE: Experimental**
 pub fn unfold_eager[A, S](state~ : S, step~ : (S) -> (A, S)?) -> T[A] {
   from_array(unfold_(state~, step~))
 }
 
-///|
+///| **NOTE: Experimental**
 pub fn unfold[A, S](state~ : S, step~ : (S) -> (A, S)?) -> T[A] {
   let mut state = state
   {
@@ -45,7 +45,7 @@ pub fn unfold[A, S](state~ : S, step~ : (S) -> (A, S)?) -> T[A] {
   }
 }
 
-///|
+///| **NOTE: Experimental**
 pub fn range_by[A : Compare](start : A, end? : A, step~ : (A) -> A) -> T[A] {
   let mut a = start
   {
@@ -70,7 +70,7 @@ pub fn range_by[A : Compare](start : A, end? : A, step~ : (A) -> A) -> T[A] {
   }
 }
 
-///|
+///| **NOTE: Experimental**
 pub fn try_collect![A, E : Error](self : T[Result[A, E]]) -> Array[A]!E {
   let array = Array::new(capacity=16)
   loop self.next() {
