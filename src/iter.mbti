@@ -7,7 +7,11 @@ fn from_array[A](Array[A]) -> T[A]
 
 fn from_iter[A](Iter[A]) -> T[A]
 
+fn new[A](() -> A?) -> T[A]
+
 fn range(Int, end? : Int, step~ : Int = .., inclusive~ : Bool = ..) -> T[Int]
+
+fn range_by[A : Compare](A, end? : A, step~ : (A) -> A) -> T[A]
 
 fn repeat[A](A) -> T[A]
 
@@ -35,10 +39,13 @@ impl T {
   join[A : Show](Self[A], separator~ : String) -> String
   map[A, B](Self[A], (A) -> B) -> Self[B]
   mapi[A, B](Self[A], (Int, A) -> B) -> Self[B]
+  max[A : Compare](Self[A]) -> A?
+  min[A : Compare](Self[A]) -> A?
   next[A](Self[A]) -> A?
   peek[A](Self[A]) -> A?
   take[A](Self[A], Int) -> Self[A]
   take_while[A](Self[A], (A) -> Bool) -> Self[A]
+  try_collect[A, E : Error](Self[Result[A, E]]) -> Array[A]!E
   zip[A, B](Self[A], Self[B]) -> Self[(A, B)]
 }
 

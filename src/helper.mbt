@@ -1,4 +1,9 @@
 ///|
+pub fn new[A](next : () -> A?) -> T[A] {
+  { run: next }
+}
+
+///|
 pub fn range(
   start : Int,
   end? : Int,
