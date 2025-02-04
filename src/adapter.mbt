@@ -79,7 +79,20 @@ pub fn iter[A](self : T[A]) -> Iter[A] {
         guard let IterContinue = yield_(v) else { x => break x }
         continue self.next()
       }
-      None => break IterEnd
+      None => IterEnd
+    }
+  })
+}
+
+///|
+pub fn iter2[A, B](self : T[(A, B)]) -> Iter2[A, B] {
+  @builtin.Iter2::new(fn(yield_) {
+    loop (self.run)() {
+      Some((v, w)) => {
+        guard let IterContinue = yield_(v, w) else { x => break x }
+        continue self.next()
+      }
+      None => IterEnd
     }
   })
 }
