@@ -46,6 +46,7 @@ impl T {
   fold[A, B](Self[A], init~ : B, (B, A) -> B) -> B
   intersperse[A](Self[A], A) -> Self[A]
   iter[A](Self[A]) -> Iter[A]
+  iter2[A, B](Self[(A, B)]) -> Iter2[A, B]
   join[A : Show](Self[A], separator~ : String) -> String
   last[A](Self[A]) -> A?
   map[A, B](Self[A], (A) -> B) -> Self[B]
@@ -56,11 +57,13 @@ impl T {
   op_add[A](Self[A], Self[A]) -> Self[A]
   peek[A](Self[A]) -> A?
   prepend[A](Self[A], A) -> Self[A]
+  span[A](Self[A], (A) -> Bool) -> (Self[A], Self[A])
   take[A](Self[A], Int) -> Self[A]
   take_while[A](Self[A], (A) -> Bool) -> Self[A]
   try_collect[A, E : Error](Self[Result[A, E]]) -> Array[A]!E
   zip[A, B](Self[A], Self[B]) -> Self[(A, B)]
 }
+impl[A : Show] Show for T[A]
 
 // Type aliases
 

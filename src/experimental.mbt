@@ -1,6 +1,8 @@
 // Experimental functions, maybe removed or changed in the future.
 
-///| Creates an iterator starts from init and extends by step, until `cond` returns `false`.
+///|
+/// Creates an iterator starts from init and extends by step, until `cond` returns `false`.
+/// 
 /// **Note: experimental function**
 pub fn seq[A](init~ : A, step~ : (A) -> A, cond~ : (A) -> Bool) -> T[A] {
   let mut v = init
@@ -120,28 +122,31 @@ pub fn max[A : Compare](self : T[A]) -> A? {
   }
 }
 
-///| Appends an element to the end of the iterator.
+///|
+/// Appends an element to the end of the iterator.
 /// 
 /// *Note*: The name might be subject to change, related issue: https://github.com/moonbitlang/core/issues/1511
 pub fn append[A](self : T[A], other : A) -> T[A] {
   self.concat(singleton(other))
 }
 
-///| Prepends an element to the beginning of the iterator.
+///|
+/// Prepends an element to the beginning of the iterator.
 /// 
 /// *Note*: The name might be subject to change, related issue: https://github.com/moonbitlang/core/issues/1511
 pub fn prepend[A](self : T[A], other : A) -> T[A] {
   singleton(other).concat(self)
 }
 
-///| Splits the iterator into two parts at the first element for which `pred` returns `false`.
+///|
+/// Splits the iterator into two parts at the first element for which `pred` returns `false`.
 /// 
-/// ### Returns
+/// ## Returns
 /// 
 /// *Note that requesting the second part of the iterator will consume the first part.*
 /// 
 /// **Note: experimental function**
-pub fn span[A : Show](self : T[A], pred : (A) -> Bool) -> (T[A], T[A]) {
+pub fn span[A](self : T[A], pred : (A) -> Bool) -> (T[A], T[A]) {
   let mut taken = false
   let left_array = []
   let mut left_i = 0

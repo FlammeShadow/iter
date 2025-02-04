@@ -1,4 +1,5 @@
 ///|
+/// Transforms the elements of the iterator using `f`.
 pub fn map[A, B](self : T[A], f : (A) -> B) -> T[B] {
   {
     run: fn() {
@@ -10,7 +11,7 @@ pub fn map[A, B](self : T[A], f : (A) -> B) -> T[B] {
   }
 }
 
-///|
+///| 
 pub fn mapi[A, B](self : T[A], f : (Int, A) -> B) -> T[B] {
   let mut i = 0
   {
@@ -28,6 +29,7 @@ pub fn mapi[A, B](self : T[A], f : (Int, A) -> B) -> T[B] {
 }
 
 ///|
+/// Zips two iterators into an iterator of pairs.
 pub fn zip[A, B](self : T[A], other : T[B]) -> T[(A, B)] {
   {
     run: fn() {
@@ -56,6 +58,7 @@ pub fn filter[A](self : T[A], f : (A) -> Bool) -> T[A] {
 }
 
 ///|
+/// Transforms the elements of the iterator using `f` ignoring `None`.
 pub fn filter_map[A, B](self : T[A], f : (A) -> B?) -> T[B] {
   {
     run: fn() {
@@ -98,6 +101,7 @@ pub fn iter2[A, B](self : T[(A, B)]) -> Iter2[A, B] {
 }
 
 ///|
+/// Creates a new iterator which places `separator` between adjacent items of the original one.
 pub fn intersperse[A](self : T[A], sep : A) -> T[A] {
   let mut insert = false
   {
@@ -119,6 +123,7 @@ pub fn intersperse[A](self : T[A], sep : A) -> T[A] {
 }
 
 ///|
+/// Transforms each element of the iterator into an iterator and flattens the resulting iterators into a single iterator.
 pub fn flat_map[A, B](self : T[A], f : (A) -> T[B]) -> T[B] {
   let mut it = empty()
   {
@@ -139,11 +144,13 @@ pub fn flat_map[A, B](self : T[A], f : (A) -> T[B]) -> T[B] {
 }
 
 ///|
+/// Flattens an iterator of iterators into a single iterator.
 pub fn flatten[A](self : T[T[A]]) -> T[A] {
   self.flat_map(fn(x) { x })
 }
 
 ///|
+/// Concatenates two iterators by appending the elements of the second iterator to the first.
 pub fn concat[A](self : T[A], other : T[A]) -> T[A] {
   {
     run: fn() {
