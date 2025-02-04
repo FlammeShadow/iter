@@ -114,3 +114,17 @@ pub fn max[A : Compare](self : T[A]) -> A? {
     None => max
   }
 }
+
+///| Appends an element to the end of the iterator.
+/// 
+/// *Note*: The name might be subject to change, related issue: https://github.com/moonbitlang/core/issues/1511
+pub fn append[A](self : T[A], other : A) -> T[A] {
+  self.concat(singleton(other))
+}
+
+///| Prepends an element to the beginning of the iterator.
+/// 
+/// *Note*: The name might be subject to change, related issue: https://github.com/moonbitlang/core/issues/1511
+pub fn prepend[A](self : T[A], other : A) -> T[A] {
+  singleton(other).concat(self)
+}

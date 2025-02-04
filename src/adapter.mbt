@@ -49,9 +49,8 @@ pub fn filter[A](self : T[A], f : (A) -> Bool) -> T[A] {
     run: fn() {
       loop self.next() {
         Some(v) => if f(v) { return Some(v) } else { continue self.next() }
-        None => break
+        None => None
       }
-      None
     },
   }
 }
@@ -129,4 +128,21 @@ pub fn flat_map[A, B](self : T[A], f : (A) -> T[B]) -> T[B] {
 ///|
 pub fn flatten[A](self : T[T[A]]) -> T[A] {
   self.flat_map(fn(x) { x })
+}
+
+///|
+pub fn concat[A](self : T[A], other : T[A]) -> T[A] {
+  {
+    run: fn() {
+      match (self.run)() {
+        None => (other.run)()
+        Some(v) => Some(v)
+      }
+    },
+  }
+}
+
+///|
+pub fn op_add[A](self : T[A], other : T[A]) -> T[A] {
+  self.concat(other)
 }

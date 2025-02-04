@@ -1,7 +1,6 @@
 ///|
 pub fn next[A](self : T[A]) -> A? {
-  let a = (self.run)()
-  a
+  (self.run)()
 }
 
 ///|
@@ -23,6 +22,14 @@ pub fn peek[A](self : T[A]) -> A? {
 }
 
 ///|
+pub fn last[A](self : T[A]) -> A? {
+  loop None, self.next() {
+    _, Some(v) => continue Some(v), self.next()
+    v, None => v
+  }
+}
+
+///|
 pub fn count[A](self : T[A]) -> Int {
   let mut i = 0
   loop self.next() {
@@ -30,9 +37,8 @@ pub fn count[A](self : T[A]) -> Int {
       i += 1
       continue self.next()
     }
-    None => break
+    None => i
   }
-  i
 }
 
 ///|
@@ -58,7 +64,7 @@ pub fn take[A](self : T[A], n : Int) -> T[A] {
 ///|
 pub fn take_while[A](self : T[A], f : (A) -> Bool) -> T[A] {
   let mut end = false
-  let it = {
+  {
     run: fn() {
       if not(end) {
         match (self.run)() {
@@ -76,29 +82,50 @@ pub fn take_while[A](self : T[A], f : (A) -> Bool) -> T[A] {
       }
     },
   }
-  it
 }
 
-///|
+///| Drops the first `n` elements from the iterator.
+/// 
+/// Note: The function is lazy, which only skips elements when it is requested.
 pub fn drop[A](self : T[A], n : Int) -> T[A] {
-  let mut i = 0
-  while i < n {
-    i += 1
-    (self.run)() |> ignore
+  let mut i : Int = 0
+  let mut dropped = false
+  {
+    run: fn() {
+      if not(dropped) {
+        while i < n {
+          i += 1
+          (self.run)() |> ignore
+        }
+        dropped = true
+        (self.run)()
+      } else {
+        (self.run)()
+      }
+    },
   }
-  { run: fn() { (self.run)() } }
 }
 
-///|
+///| Skips elements from the iterator while the predicate returns `true`.
+/// 
+/// Note: The function is lazy, which only skips elements when it is requested.
 pub fn drop_while[A](self : T[A], f : (A) -> Bool) -> T[A] {
-  let mut end = false
-  while not(end) {
-    match (self.run)() {
-      None => break
-      Some(v) => if f(v) { continue } else { end = true }
-    }
+  let mut dropped = false
+  {
+    run: fn() {
+      if not(dropped) {
+        while not(dropped) {
+          match (self.run)() {
+            None => break
+            Some(v) => if f(v) { continue } else { dropped = true }
+          }
+        }
+        (self.run)()
+      } else {
+        (self.run)()
+      }
+    },
   }
-  { run: fn() { (self.run)() } }
 }
 
 ///|
@@ -109,9 +136,8 @@ pub fn collect[A](self : T[A]) -> Array[A] {
       array.push(v)
       continue self.next()
     }
-    None => break
+    None => array
   }
-  array
 }
 
 ///|
@@ -151,9 +177,8 @@ pub fn join[A : Show](self : T[A], separator~ : String) -> String {
       builder.write_string(v.to_string())
       continue self.next()
     }
-    None => break
+    None => builder.to_string()
   }
-  builder.to_string()
 }
 
 ///|
@@ -170,7 +195,7 @@ pub fn find_first[A](self : T[A], f : (A) -> Bool) -> A? {
 }
 
 ///|
-pub fn fold[A, B](self : T[A], init : B, f : (B, A) -> B) -> B {
+pub fn fold[A, B](self : T[A], init~ : B, f : (B, A) -> B) -> B {
   let mut acc = init
   loop self.next() {
     Some(v) => {
