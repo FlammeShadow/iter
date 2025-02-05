@@ -1,1 +1,9 @@
-{}
+{
+    "link": {
+        "wasm": {
+            "exports": ["test_each_by_fold", "test_each", "test_iter_each", "test_each_by_map",
+                "test_collect", "test_iter_collect", "test_collect_by_fold",
+                "test_filter", "test_iter_filter", "test_filter_by_fold"]
+        }
+    }
+}

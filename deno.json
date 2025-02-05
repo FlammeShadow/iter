@@ -1,0 +1,7 @@
+{
+  "tasks": {
+    "dev": "deno run --watch benchmark/main.js",
+    "run": "moon build --target wasm;cp targe/wasm/release/build/iter.wasm benchmark/;deno run --watch benchmark/main.js",
+    "bench": "moon build --target wasm;cp target/wasm/release/build/iter.wasm benchmark/;deno bench benchmark/main.js"
+  }
+}

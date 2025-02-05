@@ -4,7 +4,10 @@
   "readme": "README.md",
   "repository": "",
   "license": "BSD-2-Clause",
-  "keywords": ["external iterator", "utils"],
+  "keywords": [
+    "external iterator",
+    "utils"
+  ],
   "description": "",
   "source": "src"
 }

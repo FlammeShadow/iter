@@ -1,2 +1,4 @@
 target/
 .mooncakes/
+benchmark/iter.wasm
+deno.lock
