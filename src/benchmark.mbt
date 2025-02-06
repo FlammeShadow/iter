@@ -95,3 +95,19 @@ pub fn test_iter_filter() -> Unit {
   let iter = arr.iter()
   iter.filter(fn(x) { x % 2 == 0 }) |> ignore
 }
+
+fn span_by_iter[T](iter : Iter[T], f : (T) -> Bool) -> (Iter[T], Iter[T]) {
+  (iter.take_while(f), iter.drop_while(f))
+}
+
+pub fn test_span_by_iter() -> Unit {
+  let (even, odd) = span_by_iter(arr.iter(), fn(x) { x < 5000 })
+  even.collect() |> ignore
+  odd.collect() |> ignore
+}
+
+pub fn test_span() -> Unit {
+  let (even, odd) = from_array(arr).span(fn(x) { x < 5000 })
+  odd.collect() |> ignore
+  even.collect() |> ignore
+}
