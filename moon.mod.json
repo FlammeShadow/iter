@@ -1,8 +1,8 @@
 {
   "name": "YumeXi/iter",
-  "version": "0.2.3",
+  "version": "0.2.5",
   "readme": "README.md",
-  "repository": "",
+  "repository": "https://github.com/FlammeShadow/iter",
   "license": "BSD-2-Clause",
   "keywords": ["external iterator", "utils"],
   "description": "",

@@ -26,7 +26,7 @@ fn unfold[A, S](state~ : S, step~ : (S) -> (A, S)?) -> T[A]
 fn unfold_eager[A, S](state~ : S, step~ : (S) -> (A, S)?) -> T[A]
 
 // Types and methods
-pub struct T {
+pub struct T[A] {
   run : () -> A?
 }
 impl T {

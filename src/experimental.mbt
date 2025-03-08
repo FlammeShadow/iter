@@ -199,6 +199,7 @@ pub fn span[A](self : T[A], pred : (A) -> Bool) -> (T[A], T[A]) {
   (left, right)
 }
 
+///|
 test {
   let test_iter = range(1, end=20, inclusive=true)
   let (left, right) = test_iter.span(fn(n) { n <= 10 })

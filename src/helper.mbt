@@ -41,13 +41,13 @@ pub fn from_iter[A](iter : Iter[A]) -> T[A] {
   let mut iter = iter
   {
     run: fn() {
-      guard let None as v = iter.head() else {
+      match iter.head() {
+        None => None
         Some(_) as v => {
           iter = iter.drop(1)
           v
         }
       }
-      v
     },
   }
 }
