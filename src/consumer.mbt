@@ -121,10 +121,11 @@ pub fn drop_while[A](self : T[A], f : (A) -> Bool) -> T[A] {
   {
     run: fn() {
       if not(dropped) {
-        while not(dropped) {
-          match (self.run)() {
-            None => break
-            Some(v) => if f(v) { continue } else { dropped = true }
+        while self.next() is Some(v) && not(dropped) {
+          if f(v) {
+            continue
+          } else {
+            dropped = true
           }
         }
         (self.run)()
@@ -138,25 +139,18 @@ pub fn drop_while[A](self : T[A], f : (A) -> Bool) -> T[A] {
 ///|
 /// Collects the elements of the iterator into an array.
 pub fn collect[A](self : T[A]) -> Array[A] {
-  let array = Array::new(capacity=16)
-  loop self.next() {
-    Some(v) => {
-      array.push(v)
-      continue self.next()
-    }
-    None => array
+  let array = Array::new()
+  while self.next() is Some(v) {
+    array.push(v)
   }
+  array
 }
 
 ///|
 /// Applies `f` to each element of the iterator.
 pub fn each[A](self : T[A], f : (A) -> Unit) -> Unit {
-  loop self.next() {
-    Some(v) => {
-      f(v)
-      continue self.next()
-    }
-    None => break
+  while self.next() is Some(v) {
+    f(v)
   }
 }
 
@@ -164,17 +158,14 @@ pub fn each[A](self : T[A], f : (A) -> Unit) -> Unit {
 /// Applies `f` to each element of the iterator, passing the index as a parameter.
 pub fn eachi[A](self : T[A], f : (Int, A) -> Unit) -> Unit {
   let mut i = 0
-  loop self.next() {
-    Some(v) => {
-      f(i, v)
-      i += 1
-      continue self.next()
-    }
-    None => break
+  while self.next() is Some(v) {
+    f(i, v)
+    i += 1
   }
 }
 
 ///|
+/// Concatenates the elements of the iterator into a string, separated by `separator`.
 pub fn join[A : Show](self : T[A], separator~ : String) -> String {
   let builder = StringBuilder::new()
   match self.next() {
@@ -194,14 +185,12 @@ pub fn join[A : Show](self : T[A], separator~ : String) -> String {
 ///|
 /// Finds the first element in the iterator that satisfies the predicate, or `None` if no such element is found.
 pub fn find_first[A](self : T[A], pred : (A) -> Bool) -> A? {
-  loop self.next() {
-    Some(v) => {
-      if pred(v) {
-        break Some(v)
-      }
-      continue self.next()
+  while self.next() is Some(v) {
+    if pred(v) {
+      break Some(v)
     }
-    None => None
+  } else {
+    None
   }
 }
 
@@ -215,6 +204,44 @@ pub fn fold[A, B](self : T[A], init~ : B, f : (B, A) -> B) -> B {
       continue self.next()
     }
     None => acc
+  }
+}
+
+///|
+/// Returns the nth element of the iterator, or `None` if there isn't one.
+pub fn nth[A](self : T[A], n : Int) -> A? {
+  self.drop(n).peek()
+}
+
+///|
+/// Returns the maximum element of the iterator, or `None` if the iterator is empty.
+pub fn minimum[A : Compare](self : T[A]) -> A? {
+  let mut min = None
+  loop self.next() {
+    Some(v) => {
+      match min {
+        None => min = Some(v)
+        Some(min_v) => if v < min_v { min = Some(v) }
+      }
+      continue self.next()
+    }
+    None => min
+  }
+}
+
+///| 
+/// Returns the minimum element of the iterator, or `None` if the iterator is empty.
+pub fn maximum[A : Compare](self : T[A]) -> A? {
+  let mut max = None
+  loop self.next() {
+    Some(v) => {
+      match max {
+        None => max = Some(v)
+        Some(max_v) => if v > max_v { max = Some(v) }
+      }
+      continue self.next()
+    }
+    None => max
   }
 }
 

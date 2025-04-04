@@ -93,36 +93,6 @@ pub fn try_collect![A, E : Error](self : T[Result[A, E]]) -> Array[A]!E {
 }
 
 ///|
-pub fn min[A : Compare](self : T[A]) -> A? {
-  let mut min = None
-  loop self.next() {
-    Some(v) => {
-      match min {
-        None => min = Some(v)
-        Some(min_v) => if v < min_v { min = Some(v) }
-      }
-      continue self.next()
-    }
-    None => min
-  }
-}
-
-///|
-pub fn max[A : Compare](self : T[A]) -> A? {
-  let mut max = None
-  loop self.next() {
-    Some(v) => {
-      match max {
-        None => max = Some(v)
-        Some(max_v) => if v > max_v { max = Some(v) }
-      }
-      continue self.next()
-    }
-    None => max
-  }
-}
-
-///|
 /// Appends an element to the end of the iterator.
 /// 
 /// *Note*: The name might be subject to change, related issue: https://github.com/moonbitlang/core/issues/1511
