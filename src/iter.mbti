@@ -85,9 +85,9 @@ fn take_while[A](T[A], (A) -> Bool) -> T[A]
 
 fn try_collect[A, E : Error](T[Result[A, E]]) -> Array[A]!E
 
-fn unfold[A, S](state~ : S, step~ : (S) -> (A, S)?) -> T[A]
+fn unfold[A, S](init~ : S, step~ : (S) -> (A, S)?) -> T[A]
 
-fn unfold_eager[A, S](state~ : S, step~ : (S) -> (A, S)?) -> T[A]
+fn unfold_eager[A, S](init~ : S, step~ : (S) -> (A, S)?) -> T[A]
 
 fn zip[A, B](T[A], T[B]) -> T[(A, B)]
 

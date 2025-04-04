@@ -20,23 +20,20 @@ pub fn seq[A](init~ : A, step~ : (A) -> A, cond~ : (A) -> Bool) -> T[A] {
 }
 
 ///|
-fn unfold_[A, S](state~ : S, step~ : (S) -> (A, S)?) -> Array[A] {
-  match step(state) {
-    Some((v, state)) => [v, ..unfold_(state~, step~)]
-    None => []
-  }
+/// **Note: experimental function**
+pub fn unfold_eager[A, S](init~ : S, step~ : (S) -> (A, S)?) -> T[A] {
+  from_array(
+    loop step(init), [] {
+      Some((v, state)), arr => continue step(state), [..arr, v]
+      None, arr => arr
+    },
+  )
 }
 
 ///|
 /// **Note: experimental function**
-pub fn unfold_eager[A, S](state~ : S, step~ : (S) -> (A, S)?) -> T[A] {
-  from_array(unfold_(state~, step~))
-}
-
-///|
-/// **Note: experimental function**
-pub fn unfold[A, S](state~ : S, step~ : (S) -> (A, S)?) -> T[A] {
-  let mut state = state
+pub fn unfold[A, S](init~ : S, step~ : (S) -> (A, S)?) -> T[A] {
+  let mut state = init
   {
     run: fn() {
       match step(state) {
@@ -48,6 +45,20 @@ pub fn unfold[A, S](state~ : S, step~ : (S) -> (A, S)?) -> T[A] {
       }
     },
   }
+}
+
+///|
+test {
+  assert_eq!(
+    unfold(init=20, step=fn(n) { if n >= 0 { Some((n, n - 2)) } else { None } }).collect(),
+    unfold_eager(init=20, step=fn(n) {
+      if n >= 0 {
+        Some((n, n - 2))
+      } else {
+        None
+      }
+    }).collect(),
+  ) // => [20, 18, 16, 14, 12, 10, 8, 6, 4, 2, 0]
 }
 
 ///|
@@ -77,7 +88,7 @@ pub fn range_by[A : Compare](start : A, end? : A, step~ : (A) -> A) -> T[A] {
 }
 
 ///|
-/// **Note: experimental function**
+/// **Note: experimental function**, related pr: https://github.com/moonbitlang/core/pull/1260
 pub fn try_collect![A, E : Error](self : T[Result[A, E]]) -> Array[A]!E {
   let array = Array::new(capacity=16)
   loop self.next() {
