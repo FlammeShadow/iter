@@ -1,5 +1,5 @@
 ///|
-pub fn new[A](next : () -> A?) -> T[A] {
+pub fn[A] new(next : () -> A?) -> T[A] {
   { run: next }
 }
 
@@ -8,8 +8,8 @@ pub fn new[A](next : () -> A?) -> T[A] {
 pub fn range(
   start : Int,
   end? : Int,
-  step~ : Int = 1,
-  inclusive~ : Bool = false
+  step? : Int = 1,
+  inclusive? : Bool = false,
 ) -> T[Int] {
   let mut i = start
   let end = if inclusive { end.map(fn(n) { n + step }) } else { end }
@@ -37,7 +37,7 @@ pub fn range(
 
 ///|
 /// Creates an iterator that generates values from an internal iterator.
-pub fn from_iter[A](iter : Iter[A]) -> T[A] {
+pub fn[A] from_iter(iter : Iter[A]) -> T[A] {
   let mut iter = iter
   {
     run: fn() {
@@ -54,7 +54,7 @@ pub fn from_iter[A](iter : Iter[A]) -> T[A] {
 
 ///|
 /// Creates an iterator that generates values from an array.
-pub fn from_array[A](array : Array[A]) -> T[A] {
+pub fn[A] from_array(array : Array[A]) -> T[A] {
   let mut i = 0
   {
     run: fn() {
@@ -70,13 +70,13 @@ pub fn from_array[A](array : Array[A]) -> T[A] {
 
 ///|
 /// Creates an empty iterator.
-pub fn empty[A]() -> T[A] {
+pub fn[A] empty() -> T[A] {
   { run: fn() { None } }
 }
 
 ///|
 /// Creates an iterator that contains a single element.
-pub fn singleton[A](a : A) -> T[A] {
+pub fn[A] singleton(a : A) -> T[A] {
   let used = false
   {
     run: fn() {
@@ -90,12 +90,12 @@ pub fn singleton[A](a : A) -> T[A] {
 
 ///|
 /// Creates an iterator that repeats a value indefinitely.
-pub fn repeat[A](a : A) -> T[A] {
+pub fn[A] repeat(a : A) -> T[A] {
   { run: fn() { Some(a) } }
 }
 
 ///|
 /// Creates an iterator that repeats the result of executing a function indefinitely.
-pub fn repeat_by[A](f : () -> A) -> T[A] {
+pub fn[A] repeat_by(f : () -> A) -> T[A] {
   { run: fn() { Some(f()) } }
 }

@@ -5,5 +5,5 @@ test {
   while iter.next() is Some(v) && v <= 3 {
     arr.push(v)
   }
-  assert_eq!(arr, [1, 2, 3])
+  assert_eq(arr, [1, 2, 3])
 }

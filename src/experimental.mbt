@@ -4,7 +4,7 @@
 /// Creates an iterator starts from init and extends by step, until `cond` returns `false`.
 /// 
 /// **Note: experimental function**
-pub fn seq[A](init~ : A, step~ : (A) -> A, cond~ : (A) -> Bool) -> T[A] {
+pub fn[A] seq(init~ : A, step~ : (A) -> A, cond~ : (A) -> Bool) -> T[A] {
   let mut v = init
   {
     run: fn() {
@@ -21,18 +21,18 @@ pub fn seq[A](init~ : A, step~ : (A) -> A, cond~ : (A) -> Bool) -> T[A] {
 
 ///|
 /// **Note: experimental function**
-pub fn unfold_eager[A, S](init~ : S, step~ : (S) -> (A, S)?) -> T[A] {
+pub fn[A, S] unfold_eager(init~ : S, step~ : (S) -> (A, S)?) -> T[A] {
   from_array(
-    loop step(init), [] {
-      Some((v, state)), arr => continue step(state), [..arr, v]
-      None, arr => arr
+    loop (step(init), []) {
+      (Some((v, state)), arr) => continue (step(state), [..arr, v])
+      (None, arr) => arr
     },
   )
 }
 
 ///|
 /// **Note: experimental function**
-pub fn unfold[A, S](init~ : S, step~ : (S) -> (A, S)?) -> T[A] {
+pub fn[A, S] unfold(init~ : S, step~ : (S) -> (A, S)?) -> T[A] {
   let mut state = init
   {
     run: fn() {
@@ -49,7 +49,7 @@ pub fn unfold[A, S](init~ : S, step~ : (S) -> (A, S)?) -> T[A] {
 
 ///|
 test {
-  assert_eq!(
+  assert_eq(
     unfold(init=20, step=fn(n) { if n >= 0 { Some((n, n - 2)) } else { None } }).collect(),
     unfold_eager(init=20, step=fn(n) {
       if n >= 0 {
@@ -63,7 +63,7 @@ test {
 
 ///|
 /// **Note: experimental function**
-pub fn range_by[A : Compare](start : A, end? : A, step~ : (A) -> A) -> T[A] {
+pub fn[A : Compare] range_by(start : A, end? : A, step~ : (A) -> A) -> T[A] {
   let mut a = start
   {
     run: match end {
@@ -89,7 +89,7 @@ pub fn range_by[A : Compare](start : A, end? : A, step~ : (A) -> A) -> T[A] {
 
 ///|
 /// **Note: experimental function**, related pr: https://github.com/moonbitlang/core/pull/1260
-pub fn try_collect![A, E : Error](self : T[Result[A, E]]) -> Array[A]!E {
+pub fn[A, E : Error] try_collect(self : T[Result[A, E]]) -> Array[A] raise E {
   let array = Array::new(capacity=16)
   loop self.next() {
     Some(v) => {
@@ -107,7 +107,7 @@ pub fn try_collect![A, E : Error](self : T[Result[A, E]]) -> Array[A]!E {
 /// Appends an element to the end of the iterator.
 /// 
 /// *Note*: The name might be subject to change, related issue: https://github.com/moonbitlang/core/issues/1511
-pub fn append[A](self : T[A], other : A) -> T[A] {
+pub fn[A] append(self : T[A], other : A) -> T[A] {
   self.concat(singleton(other))
 }
 
@@ -115,7 +115,7 @@ pub fn append[A](self : T[A], other : A) -> T[A] {
 /// Prepends an element to the beginning of the iterator.
 /// 
 /// *Note*: The name might be subject to change, related issue: https://github.com/moonbitlang/core/issues/1511
-pub fn prepend[A](self : T[A], other : A) -> T[A] {
+pub fn[A] prepend(self : T[A], other : A) -> T[A] {
   singleton(other).concat(self)
 }
 
@@ -127,7 +127,7 @@ pub fn prepend[A](self : T[A], other : A) -> T[A] {
 /// *Note that requesting the second part of the iterator will consume the first part.*
 /// 
 /// **Note: experimental function**
-pub fn span[A](self : T[A], pred : (A) -> Bool) -> (T[A], T[A]) {
+pub fn[A] span(self : T[A], pred : (A) -> Bool) -> (T[A], T[A]) {
   let mut taken = false
   let left_array = []
   let mut left_i = 0
@@ -184,10 +184,10 @@ pub fn span[A](self : T[A], pred : (A) -> Bool) -> (T[A], T[A]) {
 test {
   let test_iter = range(1, end=20, inclusive=true)
   let (left, right) = test_iter.span(fn(n) { n <= 10 })
-  assert_eq!(left.collect(), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-  assert_eq!(right.collect(), [11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
+  assert_eq(left.collect(), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+  assert_eq(right.collect(), [11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
   let test_iter = range(1, end=20, inclusive=true)
   let (left, right) = test_iter.span(fn(n) { n <= 10 })
-  assert_eq!(right.collect(), [11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
-  assert_eq!(left.collect(), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+  assert_eq(right.collect(), [11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
+  assert_eq(left.collect(), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 }
