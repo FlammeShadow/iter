@@ -63,7 +63,7 @@ test {
 
 ///|
 /// **Note: experimental function**
-pub fn[A : Compare] range_by(start : A, end? : A, step~ : (A) -> A) -> T[A] {
+pub fn[A : Compare] range_by(start~ : A, end? : A, step~ : (A) -> A) -> T[A] {
   let mut a = start
   {
     run: match end {
@@ -182,11 +182,11 @@ pub fn[A] span(self : T[A], pred : (A) -> Bool) -> (T[A], T[A]) {
 
 ///|
 test {
-  let test_iter = range(1, end=20, inclusive=true)
+  let test_iter = range(start=1, end=20, inclusive=true)
   let (left, right) = test_iter.span(fn(n) { n <= 10 })
   assert_eq(left.collect(), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
   assert_eq(right.collect(), [11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
-  let test_iter = range(1, end=20, inclusive=true)
+  let test_iter = range(start=1, end=20, inclusive=true)
   let (left, right) = test_iter.span(fn(n) { n <= 10 })
   assert_eq(right.collect(), [11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
   assert_eq(left.collect(), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])

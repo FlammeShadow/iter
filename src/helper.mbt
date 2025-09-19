@@ -6,7 +6,7 @@ pub fn[A] new(next : () -> A?) -> T[A] {
 ///|
 /// Creates an iterator that generates values from a range.
 pub fn range(
-  start : Int,
+  start~ : Int,
   end? : Int,
   step? : Int = 1,
   inclusive? : Bool = false,
